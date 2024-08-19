@@ -38,7 +38,11 @@ class WeatherService {
 
   //Create destructureLocationData method
   private destructureLocationData(locationData: Coordinates): Coordinates {
-    const { lat, lon } = locationData;
+    let { lat, lon } = locationData;
+    
+    lat = Math.round(lat*100)/100;
+    lon = Math.round(lon*100)/100;
+
     return { lat, lon };
   }
 
