@@ -98,7 +98,6 @@ class WeatherService {
     weatherData.map((x) => {
       if (x.dt_txt.includes('00:00:00')) {
         const weather = x;
-        console.log(`x: `, x);
 
         const city = currentWeather.city;
         const date = weather.dt_txt.split(' ')[0];
@@ -112,7 +111,6 @@ class WeatherService {
       }
     })
 
-    console.log(`forcastArray: `, forecastArray);
     return forecastArray;
   }
 
