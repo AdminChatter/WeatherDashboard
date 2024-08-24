@@ -57,7 +57,6 @@ const fetchSearchHistory = async () => {
     },
   });
 
-  console.log('history: ', history);
   return history;
 };
 
@@ -68,8 +67,6 @@ const deleteCityFromHistory = async (id: string) => {
       'Content-Type': 'application/json',
     },
   });
-
-  console.log('City Deleted',);
 };
 
 /*
