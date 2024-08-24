@@ -1,6 +1,14 @@
 [
 	{
+		"name": "Toronto",
+		"id": "5c8971aa-0074-436d-9b5d-2d58b8dbbc4c"
+	},
+	{
 		"name": "Mississauga",
-		"id": "607b482a-d635-47eb-9d2d-34b57f561ded"
+		"id": "47e901de-1a35-41ad-bd76-13e57047648c"
+	},
+	{
+		"name": "San Diego",
+		"id": "0c739c43-3ef6-4c6f-88dc-578f68ee93e9"
 	}
 ]

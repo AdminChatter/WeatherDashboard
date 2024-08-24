@@ -91,25 +91,28 @@ class WeatherService {
   }
 
   //Method to build the forecast array
-  //Test Information website: https://api.openweathermap.org/data/2.5/forecast?lat=43.58&lon=-79.64&units=imperial&appid=329ab86a330d12d34419e30035a4b9ef
   private buildForecastArray(currentWeather: Weather, weatherData: any[]){
     const forecastArray = [];
     forecastArray.push(currentWeather);
 
-    for (let i = 0; i < weatherData.length; i=i+8) {
-      const weather = weatherData[i];
+    weatherData.map((x) => {
+      if (x.dt_txt.includes('00:00:00')) {
+        const weather = x;
+        console.log(`x: `, x);
 
-      const city = currentWeather.city;
-      const date = weather.dt_txt;
-      const icon = weather.weather[0].icon;
-      const iconDescription = weather.weather[0].description;
-      const tempF = weather.main.temp;
-      const windSpeed = weather.wind.speed;
-      const humidity = weather.main.humidity;
+        const city = currentWeather.city;
+        const date = weather.dt_txt.split(' ')[0];
+        const icon = weather.weather[0].icon;
+        const iconDescription = weather.weather[0].description;
+        const tempF = weather.main.temp;
+        const windSpeed = weather.wind.speed;
+        const humidity = weather.main.humidity;
 
-      forecastArray.push(new Weather(city, date, icon, iconDescription, tempF, windSpeed, humidity));
-    }
+        forecastArray.push(new Weather(city, date, icon, iconDescription, tempF, windSpeed, humidity));
+      }
+    })
 
+    console.log(`forcastArray: `, forecastArray);
     return forecastArray;
   }
 

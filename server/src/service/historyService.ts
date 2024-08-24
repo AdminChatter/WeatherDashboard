@@ -42,6 +42,19 @@ class HistoryService {
     });
   }
   
+  async formatCityName(inputString: string) {
+    // Trim leading and trailing spaces
+    let formattedString = inputString.trim();
+    
+    // Capitalize the first letter of each word
+    formattedString = formattedString
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(' ');
+    
+    return formattedString;
+}
+
   //addCity method that adds a city to the searchHistory.json file
   async addCity(city: string) {
     if (!city) {
@@ -49,9 +62,7 @@ class HistoryService {
     }
 
     // Trim and format the city name
-    city = city.trim();
-    city = city.toLowerCase();
-    city = city.charAt(0).toUpperCase() + city.slice(1);
+    city = await this.formatCityName(city);
     const newCity: City = { name: city, id: uuidv4() };
 
     return await this.getCities()

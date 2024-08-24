@@ -8,7 +8,6 @@ The Weather Dashboard is a web application designed to provide users with weathe
 
 - [Installation](#installation)
 - [Usage](#usage)
-- [DemoVideo](#demovideo)
 - [Credits](#credits)
 - [License](#license)
 - [Badges](#badges)
@@ -34,10 +33,6 @@ To use the Weather Dashboard:
 2. The application will display the current weather and a 5-day forecast for the city.
 3. The search history is saved locally, and clicking on a past search will reload the weather data for that city.
 4. You can also delete a city from the search history if needed.
-
-## DemoVideo
-
-There is a demostration video in [youtube](https://youtu.be/nQZLaSolYPs)
 
 ## Credits
 
