@@ -19,6 +19,7 @@ class HistoryService {
       flag: 'a+',
       encoding: 'utf8',
     });
+
     return JSON.parse(data);
   }
 
@@ -30,15 +31,15 @@ class HistoryService {
   // Define a getCities method that reads the cities from the searchHistory.json file and returns them as an array of City objects
   async getCities() {
     return await this.read().then((cities) => {
-      let parsedCities: City[];
+      let searchHistory: City[];
 
-      try {
-        parsedCities = [].concat(JSON.parse(cities));
-      } catch (err) {
-        parsedCities = [];
+      if (cities.length === 0) {
+        searchHistory = [];
+      } else {
+        searchHistory = cities;
       }
 
-      return parsedCities;
+      return searchHistory;
     });
   }
   
@@ -52,11 +53,14 @@ class HistoryService {
 
     return await this.getCities()
       .then((cities) => {
+
         if (cities.find((index) => index.name === city)) {
           return cities;
         }
+
         return [...cities, newCity];
       })
+
       .then((updatedCities) => this.write(updatedCities))
       .then(() => newCity);
   }
