@@ -1,13 +1,13 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-//Define an interface for the Coordinates object
+//interface for the Coordinates object
 interface Coordinates {
   lat: number;
   lon: number;
 }
 
-//Define a class for the Weather object
+//class for the Weather object
 class Weather {
   city: string;
   date: string;
@@ -28,21 +28,13 @@ class Weather {
   }
 }
 
-//Complete the WeatherService class
+//Class for the WeatherService
 class WeatherService {
-  //Define the baseURL, API key, and city name properties
   private baseURL = process.env.API_BASE_URL;
   private apiKey = process.env.API_KEY;
   private cityName = '';
 
-  //Create fetchLocationData method
-  // private async fetchLocationData(query: string) {
-  //   return await fetch(
-  //     `${this.baseURL}/data/3.0/onecall/timemachine?${query}`
-  //   );
-  // }
-
-  //Create destructureLocationData method
+  //Method to destructure the location data
   private destructureLocationData(locationData: Coordinates): Coordinates {
     let { lat, lon } = locationData;
     
@@ -52,13 +44,12 @@ class WeatherService {
     return { lat, lon };
   }
 
-  //Create buildGeocodeQuery method
-  //Test information website: https://api.openweathermap.org/geo/1.0/direct?q=mississauga&limit=1&appid=329ab86a330d12d34419e30035a4b9ef
+  //Method to build the geocode query
   private buildGeocodeQuery(): string {
     return `${this.baseURL}/geo/1.0/direct?q=${this.cityName}&limit=1&appid=${this.apiKey}`;
   }
 
-  //Create fetchAndDestructureLocationData method
+  //Method to fetch and destructure the location data
   private async fetchAndDestructureLocationData() {
     const geoResponse = await fetch(this.buildGeocodeQuery());
     const locationData = await geoResponse.json();
@@ -66,19 +57,18 @@ class WeatherService {
     return coordinates;
   }
 
-  // Create buildWeatherQuery method
+  //Method to build the weather query
   private buildWeatherQuery(coordinates: Coordinates): string {
     return `?lat=${coordinates.lat}&lon=${coordinates.lon}&units=imperial&appid=${this.apiKey}`;
   }
 
-  //Create fetchWeatherData method
+  //Method to fetch the current weather data
   private async fetchCurrentWeatherData(coordinates: Coordinates) {
     const response = await fetch(`${this.baseURL}/data/2.5/weather` + this.buildWeatherQuery(coordinates));
     return await response.json();
   }
 
-  //Build parseCurrentWeather method
-  //Test Information website: https://api.openweathermap.org/data/2.5/weather?lat=43.58&lon=-79.64&appid=329ab86a330d12d34419e30035a4b9ef
+  //Method to parse the current weather data
   private parseCurrentWeather(response: any) {
     const city = response.name;
     const date = new Date().toLocaleDateString();
@@ -90,18 +80,17 @@ class WeatherService {
     return new Weather(city, date, icon, iconDescription, tempF, windSpeed, humidity);
   }
 
-  //Create fetchForecastData method
+  //Method to fetch the forecast data
   private async fetchForecastData(coordinates: Coordinates) {
     const response = await fetch(`${this.baseURL}/data/2.5/forecast` + this.buildWeatherQuery(coordinates));
     return await response.json();
   }
 
-  //Create parseForecastData method
   private parseForecastData(response: any) {
     return response.list;
   }
 
-  //Complete buildForecastArray method
+  //Method to build the forecast array
   //Test Information website: https://api.openweathermap.org/data/2.5/forecast?lat=43.58&lon=-79.64&units=imperial&appid=329ab86a330d12d34419e30035a4b9ef
   private buildForecastArray(currentWeather: Weather, weatherData: any[]){
     const forecastArray = [];
@@ -124,7 +113,7 @@ class WeatherService {
     return forecastArray;
   }
 
-  //Complete getWeatherForCity method
+  //Method to get the weather for a city
   async getWeatherForCity(city: string) {
     this.cityName = city;
     const coordinates = await this.fetchAndDestructureLocationData();
