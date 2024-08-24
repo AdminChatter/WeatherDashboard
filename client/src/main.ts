@@ -45,8 +45,6 @@ const fetchWeather = async (cityName: string) => {
 
   const weatherData = await response.json();
 
-  console.log('weatherData: ', weatherData);
-
   renderCurrentWeather(weatherData[0]);
   renderForecast(weatherData.slice(1));
 };
@@ -58,6 +56,8 @@ const fetchSearchHistory = async () => {
       'Content-Type': 'application/json',
     },
   });
+
+  console.log('history: ', history);
   return history;
 };
 
@@ -68,6 +68,8 @@ const deleteCityFromHistory = async (id: string) => {
       'Content-Type': 'application/json',
     },
   });
+
+  console.log('City Deleted',);
 };
 
 /*

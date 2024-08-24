@@ -9,15 +9,21 @@ interface Coordinates {
 
 //Define a class for the Weather object
 class Weather {
-  weatherIcon: string;
-  temp: number;
-  wind: number;
+  city: string;
+  date: string;
+  icon: string;
+  iconDescription: string;
+  tempF: number;
+  windSpeed: number;
   humidity: number;
 
-  constructor(weatherIcon: string, temp: number, wind: number, humidity: number) {
-    this.weatherIcon = weatherIcon;
-    this.temp = temp;
-    this.wind = wind;
+  constructor(city: string, date: string, icon: string, iconDescription: string, tempF: number, windSpeed: number, humidity: number) {
+    this.city = city;
+    this.date = date;
+    this.icon = icon;
+    this.iconDescription = iconDescription;
+    this.tempF = tempF;
+    this.windSpeed = windSpeed;
     this.humidity = humidity;
   }
 }
@@ -25,16 +31,16 @@ class Weather {
 //Complete the WeatherService class
 class WeatherService {
   //Define the baseURL, API key, and city name properties
-  private baseURL = process.env.BASE_URL;
+  private baseURL = process.env.API_BASE_URL;
   private apiKey = process.env.API_KEY;
   private cityName = '';
 
   //Create fetchLocationData method
-  private async fetchLocationData(query: string) {
-    return await fetch(
-      `${this.baseURL}/data/3.0/onecall/timemachine?${query}`
-    );
-  }
+  // private async fetchLocationData(query: string) {
+  //   return await fetch(
+  //     `${this.baseURL}/data/3.0/onecall/timemachine?${query}`
+  //   );
+  // }
 
   //Create destructureLocationData method
   private destructureLocationData(locationData: Coordinates): Coordinates {
@@ -47,15 +53,17 @@ class WeatherService {
   }
 
   //Create buildGeocodeQuery method
+  //Test information website: https://api.openweathermap.org/geo/1.0/direct?q=mississauga&limit=1&appid=329ab86a330d12d34419e30035a4b9ef
   private buildGeocodeQuery(): string {
     return `${this.baseURL}/geo/1.0/direct?q=${this.cityName}&limit=1&appid=${this.apiKey}`;
   }
 
   //Create fetchAndDestructureLocationData method
   private async fetchAndDestructureLocationData() {
-    const response = await this.fetchLocationData(this.buildGeocodeQuery());
-    const locationData = await response.json();
-    return this.destructureLocationData(locationData[0]);
+    const geoResponse = await fetch(this.buildGeocodeQuery());
+    const locationData = await geoResponse.json();
+    const coordinates = this.destructureLocationData(locationData[0]);
+    return coordinates;
   }
 
   // Create buildWeatherQuery method
@@ -70,12 +78,16 @@ class WeatherService {
   }
 
   //Build parseCurrentWeather method
+  //Test Information website: https://api.openweathermap.org/data/2.5/weather?lat=43.58&lon=-79.64&appid=329ab86a330d12d34419e30035a4b9ef
   private parseCurrentWeather(response: any) {
-    const weatherIcon = response.weather[0].icon;
-    const temp = response.main.temp;
-    const wind_speed = response.wind.speed;
+    const city = response.name;
+    const date = new Date().toLocaleDateString();
+    const icon = response.weather[0].icon;
+    const iconDescription = response.weather[0].description;
+    const tempF = response.main.temp;
+    const windSpeed = response.wind.speed;
     const humidity = response.main.humidity;
-    return new Weather(weatherIcon, temp, wind_speed, humidity);
+    return new Weather(city, date, icon, iconDescription, tempF, windSpeed, humidity);
   }
 
   //Create fetchForecastData method
@@ -90,17 +102,23 @@ class WeatherService {
   }
 
   //Complete buildForecastArray method
+  //Test Information website: https://api.openweathermap.org/data/2.5/forecast?lat=43.58&lon=-79.64&units=imperial&appid=329ab86a330d12d34419e30035a4b9ef
   private buildForecastArray(currentWeather: Weather, weatherData: any[]){
     const forecastArray = [];
     forecastArray.push(currentWeather);
 
     for (let i = 0; i < weatherData.length; i=i+8) {
       const weather = weatherData[i];
-      const weatherIcon = weather.weather[0].icon;
-      const temp = weather.main.temp;
-      const wind_speed = weather.wind.speed;
+
+      const city = currentWeather.city;
+      const date = weather.dt_txt;
+      const icon = weather.weather[0].icon;
+      const iconDescription = weather.weather[0].description;
+      const tempF = weather.main.temp;
+      const windSpeed = weather.wind.speed;
       const humidity = weather.main.humidity;
-      forecastArray.push(new Weather(weatherIcon, temp, wind_speed, humidity));
+
+      forecastArray.push(new Weather(city, date, icon, iconDescription, tempF, windSpeed, humidity));
     }
 
     return forecastArray;

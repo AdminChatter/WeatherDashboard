@@ -9,16 +9,17 @@ router.post('/', async (req: Request, res: Response) => {
   //GET weather data from city name
   //save city to search history
   try {
-    const city = req.body.city;
-    const historyService = await HistoryService.addCity(city);
-    res.json(historyService);
+    const city = req.body.cityName;
+    await HistoryService.addCity(city);
+    const weatherData = await WeatherService.getWeatherForCity(city);
+    res.json(weatherData);
   } catch (err) {
     console.error(err);
     res.status(500).json(err);
   }
 });
 
-// TODO: GET search history
+// GET search history
 router.get('/history', async (_req: Request, res: Response) => {
   try {
     const savedCities = await HistoryService.getCities();
